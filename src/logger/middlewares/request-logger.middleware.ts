@@ -1,69 +1,33 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, NotFoundException } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
+import { WorkspaceService } from 'src/workspace/workspace.service';
 import { LoggerService } from '../logger.service';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-	constructor(private readonly loggerService: LoggerService) {}
+	constructor(
+		private readonly loggerService: LoggerService,
+		private readonly workspaceService: WorkspaceService,
+	) {}
 
-	// use(req: Request, res: Response, next: NextFunction) {
-	// 	const { method, originalUrl } = req;
+	async use(req: Request, res: Response, next: NextFunction) {
+		try {
+			const host = req.hostname;
+			const subdomain = this.extractSubdomainFromHost(host);
 
-	// 	let userId: string | undefined = undefined;
-	// 	let userEmail: string | undefined = undefined;
-	// 	let userAgent: string | undefined = undefined;
-	// 	let clientIp: string | undefined = undefined;
-	// 	let clientCountry: string | undefined = undefined;
-	// 	let clientCity: string | undefined = undefined;
+			const workspace =
+				await this.workspaceService.findBySubdomain(subdomain);
+			if (!workspace) {
+				throw new NotFoundException('Workspace not found');
+			}
+			(req as any).workspace = workspace;
+		} catch (error) {
+			return next(error);
+		}
 
-	// 	res.on('close', () => {
-
-	// 		userAgent = this.getHeadersProp(req, 'user-agent');
-	// 		clientIp =
-	// 			this.getHeadersProp(req, 'client-ip') ??
-	// 			getClientIp(req) ??
-	// 			req.ip;
-
-	// 		const geo = lookup(clientIp);
-	// 		if (geo) {
-	// 			clientCountry = geo?.country;
-	// 			clientCity = geo?.city;
-	// 		}
-
-	// 		const { statusCode } = res;
-
-	// 		// const dataToken: AccessToken | null = await this.jwtService
-	// 		// 	.getTokenPayload(req)
-	// 		// 	.catch(() => null);
-	// 		// if (dataToken) {
-	// 		// 	userId = dataToken.id;
-	// 		// 	userEmail = dataToken.sub;
-	// 		// }
-
-	// 		this.loggerService
-	// 			.create({
-	// 				ip: clientIp,
-	// 				method,
-	// 				originalUrl,
-	// 				userAgent,
-	// 				status: statusCode >= 200 && statusCode < 400,
-	// 				city: clientCity,
-	// 				country: clientCity
-	// 			})
-	// 			.catch(console.error);
-	// 	});
-
-	// 	next();
-	// }
-
-	// private getHeadersProp(req: Request, key: string) {
-	// 	return req.headers[key] as string;
-	// }
-
-	use(req: Request, res: Response, next: NextFunction) {
-		const chunks: any[] = [];
-
+		const chunks: (Buffer | string | object)[] = [];
 		const originalSend = res.send.bind(res);
+
 		res.send = (body: any): Response => {
 			chunks.push(body);
 			res.send = originalSend;
@@ -79,5 +43,14 @@ export class LoggerMiddleware implements NestMiddleware {
 		});
 
 		next();
+	}
+
+	private extractSubdomainFromHost(host: string): string {
+		// host: subdomain.domain.com
+		const parts = host.split('.');
+		if (parts.length < 3) {
+			return '';
+		}
+		return parts[0];
 	}
 }

@@ -55,13 +55,15 @@ export class WorkspaceService {
 		id: TypeID,
 		payload: UpdateWorkspaceDto,
 		user: JwtUser,
-	) {
-		const workspace = await this.userWorkspaceRepo.findOne({
+	): Promise<Workspace> {
+		const { subdomain } = payload;
+
+		const workspace = await this.workspaceRepo.findOne({
 			where: { id },
 		});
 
 		if (!workspace) {
-			throw new NotFoundException('User Workspace not found');
+			throw new NotFoundException('Workspace not found');
 		}
 
 		const role = await this.userWorkspaceService.getUserRole({
@@ -73,20 +75,26 @@ export class WorkspaceService {
 			throw new ForbiddenException('You are not admin of this workspace');
 		}
 
+		if (subdomain && subdomain !== workspace.subdomain) {
+			await this.validateService.validateUnique({
+				repo: this.workspaceRepo,
+				where: [{ subdomain }],
+				message: 'Subdomain already exists',
+			});
+		}
+
 		await this.workspaceRepo.update(id, payload);
 		return this.workspaceRepo.findOne({ where: { id } });
 	}
 
-	// async findBySubdomain(subdomain: string): Promise<Workspace | null> {
-	// 	return this.workspaceRepo.findOne({ where: { subdomain } });
-	// }
+	async findBySubdomain(subdomain: string): Promise<Workspace | null> {
+		return this.workspaceRepo.findOne({ where: { subdomain } });
+	}
 
-	// async getUserRoleInWorkspace(
-	// 	userId: string,
-	// 	workspaceId: string,
-	// ): Promise<'admin' | 'member' | null> {
-	// 	return this.userWorkspaceService.getUserRole(userId, workspaceId);
-	// }
-
-	async validateUnique() {}
+	async getUserRoleInWorkspace(
+		userId: TypeID,
+		workspaceId: TypeID,
+	): Promise<WorkspaceRole> {
+		return this.userWorkspaceService.getUserRole({ userId, workspaceId });
+	}
 }

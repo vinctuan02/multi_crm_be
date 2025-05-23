@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
@@ -30,27 +30,35 @@ export class WorkspaceController {
 		@Param('id') id: TypeID,
 		@Body() body: UpdateWorkspaceDto,
 		@Req() req: Request,
-	) {
+	): Promise<ResponseSuccessDto<Workspace>> {
 		const user = req.user as JwtUser;
-		return this.workspaceService.updateWorkspace(id, body, user);
+		const result = await this.workspaceService.updateWorkspace(
+			id,
+			body,
+			user,
+		);
+
+		return new ResponseSuccessDto({ data: result });
 	}
 
-	// @Get('meta')
-	// async getMetadata(@Req() req: Request) {
-	// 	const workspace = (req as any).workspace;
-	// 	const user = req.user as any;
+	@Get('meta')
+	async getMetadata(@Req() req: Request) {
+		const workspace = (req as any).workspace;
+		const user = req.user as any;
 
-	// 	const role = await this.workspaceService.getUserRoleInWorkspace(
-	// 		user.id,
-	// 		workspace.id,
-	// 	);
+		console.log(workspace);
 
-	// 	return {
-	// 		id: workspace.id,
-	// 		name: workspace.name,
-	// 		subdomain: workspace.subdomain,
-	// 		logoUrl: workspace.logoUrl,
-	// 		role,
-	// 	};
-	// }
+		const role = await this.workspaceService.getUserRoleInWorkspace(
+			user.id,
+			workspace.id,
+		);
+
+		return {
+			id: workspace.id,
+			name: workspace.name,
+			subdomain: workspace.subdomain,
+			logoUrl: workspace.logoUrl,
+			role,
+		};
+	}
 }
