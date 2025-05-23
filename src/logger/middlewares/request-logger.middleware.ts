@@ -8,21 +8,21 @@ export class LoggerMiddleware implements NestMiddleware {
 	constructor(
 		private readonly loggerService: LoggerService,
 		private readonly workspaceService: WorkspaceService,
-	) {}
+	) { }
 
 	async use(req: Request, res: Response, next: NextFunction) {
-		try {
-			const host = req.hostname;
-			const subdomain = this.extractSubdomainFromHost(host);
+		const host = req.hostname;
+		const parts = host.split('.');
 
-			const workspace =
-				await this.workspaceService.findBySubdomain(subdomain);
+		if (parts.length > 2) {
+			const subdomain = parts[0];
+			const workspace = await this.workspaceService.findBySubdomain(subdomain);
 			if (!workspace) {
 				throw new NotFoundException('Workspace not found');
 			}
-			(req as any).workspace = workspace;
-		} catch (error) {
-			return next(error);
+			req['workspace'] = workspace;
+		} else {
+			req['workspace'] = null;
 		}
 
 		const chunks: (Buffer | string | object)[] = [];

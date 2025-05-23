@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Req, UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
@@ -9,7 +9,7 @@ import { WorkspaceService } from './workspace.service';
 
 @Controller('workspace')
 export class WorkspaceController {
-	constructor(private readonly workspaceService: WorkspaceService) {}
+	constructor(private readonly workspaceService: WorkspaceService) { }
 
 	@Post()
 	async create(
@@ -41,17 +41,20 @@ export class WorkspaceController {
 		return new ResponseSuccessDto({ data: result });
 	}
 
-	@Get('meta')
+	@Get('workspace-data')
 	async getMetadata(@Req() req: Request) {
 		const workspace = (req as any).workspace;
-		const user = req.user as any;
+		const user = (req as any).user;
 
-		console.log(workspace);
+		if (!user) {
+			throw new UnauthorizedException('User not authenticated');
+		}
 
-		const role = await this.workspaceService.getUserRoleInWorkspace(
-			user.id,
-			workspace.id,
-		);
+		if (!workspace) {
+			throw new NotFoundException('Workspace not found in request');
+		}
+
+		const role = await this.workspaceService.getUserRoleInWorkspace(user.id, workspace.id);
 
 		return {
 			id: workspace.id,
@@ -61,4 +64,5 @@ export class WorkspaceController {
 			role,
 		};
 	}
+
 }

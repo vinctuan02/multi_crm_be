@@ -26,7 +26,7 @@ export class WorkspaceService {
 		private readonly userWorkspaceService: UserWorkspaceService,
 
 		private readonly validateService: ValidateService,
-	) {}
+	) { }
 
 	async createWorkspace(payload: CreateWorkspaceDto, user: JwtUser) {
 		const { name, subdomain } = payload;
