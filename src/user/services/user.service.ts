@@ -86,12 +86,16 @@ export class UserService {
 	async validateUser(email: string, password: string): Promise<JwtUser> {
 		const user = await this.userRepository.findOne({ where: { email } });
 
-		const validatedUser = await this.passwordService.comparePassword(
+		if (!user) {
+			throw new NotFoundException('User not found');
+		}
+
+		const isValid = await this.passwordService.comparePassword(
 			password,
 			user.password,
 		);
 
-		if (!validatedUser) {
+		if (!isValid) {
 			throw new UnauthorizedException('Invalid email or password');
 		}
 

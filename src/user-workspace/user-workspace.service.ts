@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { ValidateService } from 'src/helper/services/validate.service';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
+import { User } from 'src/user/entities/user.entity';
+import { Workspace } from 'src/workspace/entities/workspace.entity';
 import { Repository } from 'typeorm';
 import { CreateUserWorkspaceDto } from './dto/user-workspace.dto';
 import { UserWorkspace } from './entities/user-workspace.entity';
@@ -14,11 +16,31 @@ export class UserWorkspaceService {
 		@InjectRepository(UserWorkspace)
 		private readonly userWorkspaceRepository: Repository<UserWorkspace>,
 
+		@InjectRepository(User)
+		private readonly userRepository: Repository<User>,
+
+		@InjectRepository(Workspace)
+		private readonly workspaceRepository: Repository<Workspace>,
+
 		private readonly validateService: ValidateService,
 	) {}
 
 	async create(payload: CreateUserWorkspaceDto, user: JwtUser) {
 		const { userId, workspaceId } = payload;
+
+		await this.validateService.validateManyExists([
+			{
+				repo: this.userRepository,
+				id: userId,
+				message: 'User not found',
+			},
+			{
+				repo: this.workspaceRepository,
+				id: workspaceId,
+				message: 'Workspace not found',
+			},
+		]);
+
 		await this.validateService.validateUnique({
 			repo: this.userWorkspaceRepository,
 			where: [{ userId, workspaceId }],
