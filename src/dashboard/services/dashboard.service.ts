@@ -8,9 +8,7 @@ export class DashboardService {
 		private readonly orderStatisticsService: OrderStatisticsService,
 	) {}
 
-	async getDashboard(
-		query: QueryDashboardDto,
-	): Promise<IResultDashboard> {
+	async getDashboard(query: QueryDashboardDto): Promise<IResultDashboard> {
 		const result = await this.orderStatisticsService.groupByDate(query);
 		return {
 			groupByDate: result,
