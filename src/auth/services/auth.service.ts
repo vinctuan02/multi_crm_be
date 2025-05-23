@@ -3,6 +3,7 @@ import { JwtService } from 'src/jwt/jwt.service';
 import { UserCreateDto } from 'src/user/dto/user.create.dto';
 import { UserService } from 'src/user/services/user.service';
 import { AuthLoginDto } from '../dto/auth.login.dto';
+import { IToken } from '../interfaces/auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -11,11 +12,18 @@ export class AuthService {
 		private readonly jwtService: JwtService,
 	) {}
 
-	async register(payload: UserCreateDto) {
-		return this.userService.createUser(payload);
+	async register(payload: UserCreateDto): Promise<IToken> {
+		const newUser = await this.userService.createUser(payload);
+
+		const token = this.jwtService.generateToken({
+			email: newUser.email,
+			role: newUser.role,
+		});
+
+		return { token };
 	}
 
-	async login(user: AuthLoginDto): Promise<{ token: string }> {
+	async login(user: AuthLoginDto): Promise<IToken> {
 		const { email, password } = user;
 
 		const validatedUser = await this.userService.validateUser(

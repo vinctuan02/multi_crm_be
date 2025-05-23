@@ -19,3 +19,7 @@ export interface CurrentUser extends JwtPayload, Auth0UserInfo {
 	role?: RoleUser;
 	id?: TypeID;
 }
+
+export interface IToken {
+	token: string;
+}
