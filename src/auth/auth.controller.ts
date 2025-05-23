@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
-import { JwtPayload } from 'src/jwt/interfaces/jwt.interface';
+import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { UserCreateDto } from 'src/user/dto/user.create.dto';
 import { Public } from './decorators/auth.decorators';
 import { AuthLoginDto } from './dto/auth.login.dto';
@@ -24,7 +24,7 @@ export class AuthController {
 	}
 
 	@Get('me')
-	getProfile(@Req() req): ResponseSuccessDto<JwtPayload | any> {
+	getProfile(@Req() req): ResponseSuccessDto<JwtUser> {
 		return new ResponseSuccessDto({ data: req.user });
 	}
 

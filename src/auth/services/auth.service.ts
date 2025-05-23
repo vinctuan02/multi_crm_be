@@ -16,6 +16,7 @@ export class AuthService {
 		const newUser = await this.userService.createUser(payload);
 
 		const token = this.jwtService.generateToken({
+			sub: newUser.id,
 			email: newUser.email,
 			role: newUser.role,
 		});
@@ -31,7 +32,11 @@ export class AuthService {
 			password,
 		);
 
-		const token = this.jwtService.generateToken(validatedUser);
+		const token = this.jwtService.generateToken({
+			sub: validatedUser.id,
+			email: validatedUser.email,
+			role: validatedUser.role,
+		});
 
 		return { token };
 	}

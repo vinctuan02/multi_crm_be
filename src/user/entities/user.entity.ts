@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/common/entity/base-entity';
-import { Column, Entity, Unique } from 'typeorm';
+import { UserWorkspace } from 'src/user-workspace/entities/user-workspace.entity';
+import { Column, Entity, OneToMany, Unique } from 'typeorm';
 import { RoleUser } from '../enum/user.enums';
 
 @Entity('user')
@@ -22,4 +23,7 @@ export class User extends BaseEntity {
 
 	@Column({ default: true })
 	isActive: boolean;
+
+	@OneToMany(() => UserWorkspace, (userWorkspace) => userWorkspace.user)
+	userWorkspaces: UserWorkspace[];
 }

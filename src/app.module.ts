@@ -11,6 +11,7 @@ import { HelperModule } from './helper/helper.module';
 import { LoggerModule } from './logger/logger.module';
 import { OrderModule } from './order/order.module';
 import { UserModule } from './user/user.module';
+import { WorkspaceModule } from './workspace/workspace.module';
 
 @Module({
 	imports: [
@@ -31,6 +32,7 @@ import { UserModule } from './user/user.module';
 		HelperModule,
 		DashboardModule,
 		LoggerModule,
+		WorkspaceModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

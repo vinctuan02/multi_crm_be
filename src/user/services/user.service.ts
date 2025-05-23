@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataListSuccessDto } from 'src/common/dto/response.dto';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { PasswordService } from 'src/helper/services/password.service';
-import { JwtPayload } from 'src/jwt/interfaces/jwt.interface';
+import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from '../dto/user.create.dto';
 import { QueryGetDetailUserDto } from '../dto/user.query-get-detail.dto';
@@ -83,7 +83,7 @@ export class UserService {
 		return user;
 	}
 
-	async validateUser(email: string, password: string): Promise<JwtPayload> {
+	async validateUser(email: string, password: string): Promise<JwtUser> {
 		const user = await this.userRepository.findOne({ where: { email } });
 
 		const validatedUser = await this.passwordService.comparePassword(
@@ -95,6 +95,6 @@ export class UserService {
 			throw new UnauthorizedException('Invalid email or password');
 		}
 
-		return { email: user.email, role: user.role };
+		return { id: user.id, email: user.email, role: user.role };
 	}
 }
