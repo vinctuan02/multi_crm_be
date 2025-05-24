@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -9,7 +9,9 @@ import { DatabaseOptions } from './common/typeorm/ormconfig';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { HelperModule } from './helper/helper.module';
 import { LoggerModule } from './logger/logger.module';
+import { LoggerMiddleware } from './logger/middlewares/logger.middleware';
 import { OrderModule } from './order/order.module';
+import { TenantMiddleware } from './tenant/middlewares/tenant.middleware';
 import { UserModule } from './user/user.module';
 import { WorkspaceModule } from './workspace/workspace.module';
 
@@ -37,4 +39,9 @@ import { WorkspaceModule } from './workspace/workspace.module';
 	controllers: [AppController],
 	providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(LoggerMiddleware).forRoutes('*');
+		consumer.apply(TenantMiddleware).forRoutes('*');
+	}
+}

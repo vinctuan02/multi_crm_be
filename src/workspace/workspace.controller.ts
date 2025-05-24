@@ -1,6 +1,17 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Req, UnauthorizedException } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	NotFoundException,
+	Param,
+	Patch,
+	Post,
+	Req,
+	UnauthorizedException,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
+import { CustomRequest } from 'src/common/inteface/custom-request.interface';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from './dto/workspace.dto';
@@ -9,7 +20,7 @@ import { WorkspaceService } from './workspace.service';
 
 @Controller('workspace')
 export class WorkspaceController {
-	constructor(private readonly workspaceService: WorkspaceService) { }
+	constructor(private readonly workspaceService: WorkspaceService) {}
 
 	@Post()
 	async create(
@@ -41,10 +52,12 @@ export class WorkspaceController {
 		return new ResponseSuccessDto({ data: result });
 	}
 
-	@Get('workspace-data')
-	async getMetadata(@Req() req: Request) {
-		const workspace = (req as any).workspace;
-		const user = (req as any).user;
+	@Get('metadata')
+	async getMetadata(
+		@Req() req: CustomRequest,
+	): Promise<ResponseSuccessDto<Partial<Workspace>>> {
+		const workspace = req.workspace;
+		const user = req.user;
 
 		if (!user) {
 			throw new UnauthorizedException('User not authenticated');
@@ -54,15 +67,19 @@ export class WorkspaceController {
 			throw new NotFoundException('Workspace not found in request');
 		}
 
-		const role = await this.workspaceService.getUserRoleInWorkspace(user.id, workspace.id);
+		const role = await this.workspaceService.getUserRoleInWorkspace(
+			user.id,
+			workspace.id,
+		);
 
-		return {
+		const result = {
 			id: workspace.id,
 			name: workspace.name,
 			subdomain: workspace.subdomain,
 			logoUrl: workspace.logoUrl,
 			role,
 		};
-	}
 
+		return new ResponseSuccessDto({ data: result });
+	}
 }
