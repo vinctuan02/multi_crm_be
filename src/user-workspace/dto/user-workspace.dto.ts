@@ -13,3 +13,9 @@ export class CreateUserWorkspaceDto {
 	@IsEnum(WorkspaceRole)
 	role: WorkspaceRole;
 }
+
+export class InviteUserToWorkspaceDto {
+	workspaceId: TypeID;
+
+	invitedUserId: TypeID;
+}

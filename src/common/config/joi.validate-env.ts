@@ -22,4 +22,9 @@ export const envValidationSchema = Joi.object({
 	AUTH0_DOMAIN: Joi.string().required(),
 	AUTH0_AUDIENCE: Joi.string().required(),
 	AUTH0_WEBHOOK_SECRET: Joi.string().required(),
+
+	// email
+	EMAIL_SERVICE: Joi.string().required(),
+	EMAIL_USER: Joi.string().required(),
+	EMAIL_PASS: Joi.string().required(),
 });

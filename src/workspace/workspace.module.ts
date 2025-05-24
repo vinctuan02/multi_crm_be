@@ -3,9 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HelperModule } from 'src/helper/helper.module';
 import { UserWorkspace } from 'src/user-workspace/entities/user-workspace.entity';
 import { UserWorkspaceModule } from 'src/user-workspace/user-workspace.module';
+import { WorkspaceMembersController } from './controllers/workspace-members.controller';
+import { WorkspaceController } from './controllers/workspace.controller';
 import { Workspace } from './entities/workspace.entity';
-import { WorkspaceController } from './workspace.controller';
-import { WorkspaceService } from './workspace.service';
+import { WorkspaceMembersService } from './services/workspace-members.service';
+import { WorkspaceService } from './services/workspace.service';
 
 @Module({
 	imports: [
@@ -13,8 +15,8 @@ import { WorkspaceService } from './workspace.service';
 		UserWorkspaceModule,
 		HelperModule,
 	],
-	providers: [WorkspaceService],
-	controllers: [WorkspaceController],
+	providers: [WorkspaceService, WorkspaceMembersService],
+	controllers: [WorkspaceController, WorkspaceMembersController],
 	exports: [WorkspaceService],
 })
 export class WorkspaceModule {}

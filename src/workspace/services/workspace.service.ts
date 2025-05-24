@@ -9,10 +9,10 @@ import { ValidateService } from 'src/helper/services/validate.service';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { UserWorkspace } from 'src/user-workspace/entities/user-workspace.entity';
 import { WorkspaceRole } from 'src/user-workspace/enums/user-workspace.enum';
-import { UserWorkspaceService } from 'src/user-workspace/user-workspace.service';
+import { UserWorkspaceService } from 'src/user-workspace/services/user-workspace.service';
 import { Repository } from 'typeorm';
-import { CreateWorkspaceDto, UpdateWorkspaceDto } from './dto/workspace.dto';
-import { Workspace } from './entities/workspace.entity';
+import { CreateWorkspaceDto, UpdateWorkspaceDto } from '../dto/workspace.dto';
+import { Workspace } from '../entities/workspace.entity';
 
 @Injectable()
 export class WorkspaceService {
@@ -26,7 +26,7 @@ export class WorkspaceService {
 		private readonly userWorkspaceService: UserWorkspaceService,
 
 		private readonly validateService: ValidateService,
-	) { }
+	) {}
 
 	async createWorkspace(payload: CreateWorkspaceDto, user: JwtUser) {
 		const { name, subdomain } = payload;
@@ -91,10 +91,11 @@ export class WorkspaceService {
 		return this.workspaceRepo.findOne({ where: { subdomain } });
 	}
 
-	async getUserRoleInWorkspace(
-		userId: TypeID,
-		workspaceId: TypeID,
-	): Promise<WorkspaceRole> {
+	async getUserRoleInWorkspace(data: {
+		userId: TypeID;
+		workspaceId: TypeID;
+	}): Promise<WorkspaceRole> {
+		const { userId, workspaceId } = data;
 		return this.userWorkspaceService.getUserRole({ userId, workspaceId });
 	}
 }

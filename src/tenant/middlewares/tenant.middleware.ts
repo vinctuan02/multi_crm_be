@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware, NotFoundException } from '@nestjs/common';
 import { NextFunction, Request } from 'express';
-import { WorkspaceService } from '../../workspace/workspace.service';
+import { WorkspaceService } from '../../workspace/services/workspace.service';
 import { excludedSubdomains } from '../constants/tenant.constants';
 
 @Injectable()

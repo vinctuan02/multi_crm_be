@@ -14,9 +14,9 @@ import { ResponseSuccessDto } from 'src/common/dto/response.dto';
 import { CustomRequest } from 'src/common/inteface/custom-request.interface';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
-import { CreateWorkspaceDto, UpdateWorkspaceDto } from './dto/workspace.dto';
-import { Workspace } from './entities/workspace.entity';
-import { WorkspaceService } from './workspace.service';
+import { CreateWorkspaceDto, UpdateWorkspaceDto } from '../dto/workspace.dto';
+import { Workspace } from '../entities/workspace.entity';
+import { WorkspaceService } from '../services/workspace.service';
 
 @Controller('workspace')
 export class WorkspaceController {
@@ -40,9 +40,9 @@ export class WorkspaceController {
 	async update(
 		@Param('id') id: TypeID,
 		@Body() body: UpdateWorkspaceDto,
-		@Req() req: Request,
+		@Req() req: CustomRequest,
 	): Promise<ResponseSuccessDto<Workspace>> {
-		const user = req.user as JwtUser;
+		const user = req.user;
 		const result = await this.workspaceService.updateWorkspace(
 			id,
 			body,
@@ -67,10 +67,10 @@ export class WorkspaceController {
 			throw new NotFoundException('Workspace not found in request');
 		}
 
-		const role = await this.workspaceService.getUserRoleInWorkspace(
-			user.id,
-			workspace.id,
-		);
+		const role = await this.workspaceService.getUserRoleInWorkspace({
+			userId: user.id,
+			workspaceId: workspace.id,
+		});
 
 		const result = {
 			id: workspace.id,

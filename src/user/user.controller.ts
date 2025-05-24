@@ -5,9 +5,9 @@ import {
 } from 'src/common/dto/response.dto';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { UserCreateDto } from './dto/user.create.dto';
-import { QueryGetDetailUserDto } from './dto/user.query-get-detail.dto';
 import { QueryGetListUserDto } from './dto/user.query-get-list.dto';
 import { User } from './entities/user.entity';
+import { UserFieldQueryEnum } from './enum/user.field-query.enum';
 import { UserService } from './services/user.service';
 
 @Controller('user')
@@ -32,10 +32,11 @@ export class UserController {
 
 	@Get(':value')
 	async getDetailUser(
-		@Param('value') value: TypeID | string,
-		@Query() query: QueryGetDetailUserDto,
+		@Param('value') value: TypeID,
+		@Query('fieldName')
+		fieldName: UserFieldQueryEnum = UserFieldQueryEnum.ID,
 	): Promise<ResponseSuccessDto<User>> {
-		const user = await this.userService.getDetailUser(value, query);
+		const user = await this.userService.getDetailUser({ value, fieldName });
 		return new ResponseSuccessDto({ data: user });
 	}
 }

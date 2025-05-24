@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
-import { WorkspaceService } from 'src/workspace/workspace.service';
+import { WorkspaceService } from 'src/workspace/services/workspace.service';
 import { LoggerService } from '../logger.service';
 
 @Injectable()

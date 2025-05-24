@@ -11,15 +11,15 @@ export class UserWorkspace extends BaseEntity {
 	@Column()
 	userId: TypeID;
 
-	@Column()
-	workspaceId: TypeID;
-
 	@ManyToOne(() => User, {
 		onDelete: 'CASCADE',
 		onUpdate: 'CASCADE',
 	})
 	@JoinColumn({ name: 'userId' })
 	user: User;
+
+	@Column()
+	workspaceId: TypeID;
 
 	@ManyToOne(() => Workspace, {
 		onDelete: 'CASCADE',

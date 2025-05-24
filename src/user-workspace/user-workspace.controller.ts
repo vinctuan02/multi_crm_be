@@ -4,7 +4,7 @@ import { ResponseSuccessDto } from 'src/common/dto/response.dto';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { CreateUserWorkspaceDto } from './dto/user-workspace.dto';
 import { UserWorkspace } from './entities/user-workspace.entity';
-import { UserWorkspaceService } from './user-workspace.service';
+import { UserWorkspaceService } from './services/user-workspace.service';
 
 @Controller('user-workspace')
 export class UserWorkspaceController {

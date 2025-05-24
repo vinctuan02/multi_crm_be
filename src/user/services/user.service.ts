@@ -11,7 +11,6 @@ import { PasswordService } from 'src/helper/services/password.service';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { Repository } from 'typeorm';
 import { UserCreateDto } from '../dto/user.create.dto';
-import { QueryGetDetailUserDto } from '../dto/user.query-get-detail.dto';
 import { QueryGetListUserDto } from '../dto/user.query-get-list.dto';
 import { User } from '../entities/user.entity';
 import { UserFieldQueryEnum } from '../enum/user.field-query.enum';
@@ -66,11 +65,11 @@ export class UserService {
 		return !!user;
 	}
 
-	async getDetailUser(
-		value: TypeID | string,
-		query: QueryGetDetailUserDto,
-	): Promise<User> {
-		const { fieldName } = query;
+	async getDetailUser(data: {
+		value: TypeID | string;
+		fieldName: UserFieldQueryEnum;
+	}): Promise<User> {
+		const { value, fieldName } = data;
 
 		const user = await this.userRepository.findOne({
 			where: { [fieldName]: value },
