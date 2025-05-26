@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	ForbiddenException,
+	Get,
 	Param,
 	Post,
 	Req,
@@ -40,6 +41,7 @@ export class WorkspaceMembersController {
 		}
 
 		const invite = await this.workspaceMembersService.inviteUser({
+			inviterUserId: user.id,
 			invitedUserId,
 			workspaceId,
 		});
@@ -49,7 +51,7 @@ export class WorkspaceMembersController {
 	// @Post('invite/accept')
 	// async acceptInvite(@Param('workspaceId') workspaceId: TypeID, @Req() req) {
 	// 	const userId = req.user.id;
-	// 	await this.userWorkspaceService.acceptInvite(workspaceId, userId);
+	// 	await this.workspaceMembersService.acceptInvite(workspaceId, userId);
 	// 	return new ResponseSuccessDto({ message: 'Invite accepted' });
 	// }
 
@@ -69,9 +71,10 @@ export class WorkspaceMembersController {
 	// 	return new ResponseSuccessDto({ message: 'Role updated' });
 	// }
 
-	// @Get()
-	// async getMembers(@Param('workspaceId') workspaceId: TypeID, @Req() req) {
-	// 	const members = await this.userWorkspaceService.getMembers(workspaceId);
-	// 	return new ResponseSuccessDto({ data: members });
-	// }
+	@Get()
+	async getMembers(@Param('workspaceId') workspaceId: TypeID, @Req() req) {
+		const members =
+			await this.workspaceMembersService.getMembers(workspaceId);
+		return new ResponseSuccessDto({ data: members });
+	}
 }

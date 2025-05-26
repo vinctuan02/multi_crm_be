@@ -78,7 +78,7 @@ export class UserWorkspaceService {
 	}
 
 	async inviteUser(data: InviteUserToWorkspaceDto) {
-		const { workspaceId, invitedUserId } = data;
+		const { workspaceId, inviterUserId, invitedUserId } = data;
 
 		const userWorkspace = await this.userWorkspaceRepository
 			.createQueryBuilder('userWorkspace')
@@ -92,17 +92,20 @@ export class UserWorkspaceService {
 			throw new NotFoundException('Workspace not found');
 		}
 
-		console.log(workspace);
-
 		const invitedUser = await this.userService.getDetailUser({
-			fieldName: UserFieldQueryEnum.EMAIL,
+			fieldName: UserFieldQueryEnum.ID,
 			value: invitedUserId,
 		});
 
-		this.notificationService.sendEmailNotification({
-			to: invitedUser.email,
-			subject: 'Email invite workspace',
-			html: 'adsg',
+		const inviterUser = await this.userService.getDetailUser({
+			fieldName: UserFieldQueryEnum.ID,
+			value: inviterUserId,
+		});
+
+		this.notificationService.sendNotificationInvite({
+			toUser: invitedUser,
+			fromUser: inviterUser,
+			workspace,
 		});
 	}
 
@@ -119,7 +122,6 @@ export class UserWorkspaceService {
 	}
 
 	async getMembers(workspaceId: TypeID) {
-		// Trả về danh sách thành viên workspace
 		return this.userWorkspaceRepository.find({ where: { workspaceId } });
 	}
 

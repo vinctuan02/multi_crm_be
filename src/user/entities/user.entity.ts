@@ -26,4 +26,8 @@ export class User extends BaseEntity {
 
 	@OneToMany(() => UserWorkspace, (userWorkspace) => userWorkspace.user)
 	userWorkspaces: UserWorkspace[];
+
+	get fullName(): string {
+		return `${this.firstName} ${this.lastName}`;
+	}
 }

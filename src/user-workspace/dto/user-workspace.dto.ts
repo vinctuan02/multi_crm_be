@@ -16,6 +16,6 @@ export class CreateUserWorkspaceDto {
 
 export class InviteUserToWorkspaceDto {
 	workspaceId: TypeID;
-
 	invitedUserId: TypeID;
+	inviterUserId: TypeID;
 }
