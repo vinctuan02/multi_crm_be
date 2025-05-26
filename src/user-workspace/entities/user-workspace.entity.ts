@@ -3,7 +3,7 @@ import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { User } from 'src/user/entities/user.entity';
 import { Workspace } from 'src/workspace/entities/workspace.entity';
 import { Column, Entity, JoinColumn, ManyToOne, Unique } from 'typeorm';
-import { WorkspaceRole } from '../enums/user-workspace.enum';
+import { InvitationStatus, WorkspaceRole } from '../enums/user-workspace.enum';
 
 @Entity('user_workspace')
 @Unique(['userId', 'workspaceId'])
@@ -34,4 +34,11 @@ export class UserWorkspace extends BaseEntity {
 		default: WorkspaceRole.VIEWER,
 	})
 	role: WorkspaceRole;
+
+	@Column({
+		type: 'enum',
+		enum: InvitationStatus,
+		default: InvitationStatus.INVITED,
+	})
+	invitationStatus: InvitationStatus;
 }

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { ValidateService } from 'src/helper/services/validate.service';
-import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { NotificationService } from 'src/notification/services/notification.service';
 import { User } from 'src/user/entities/user.entity';
 import { UserFieldQueryEnum } from 'src/user/enum/user.field-query.enum';
@@ -14,7 +13,7 @@ import {
 	InviteUserToWorkspaceDto,
 } from '../dto/user-workspace.dto';
 import { UserWorkspace } from '../entities/user-workspace.entity';
-import { WorkspaceRole } from '../enums/user-workspace.enum';
+import { InvitationStatus, WorkspaceRole } from '../enums/user-workspace.enum';
 
 @Injectable()
 export class UserWorkspaceService {
@@ -32,9 +31,9 @@ export class UserWorkspaceService {
 		private readonly notificationService: NotificationService,
 
 		private readonly userService: UserService,
-	) {}
+	) { }
 
-	async create(payload: CreateUserWorkspaceDto, user: JwtUser) {
+	async create(payload: CreateUserWorkspaceDto) {
 		const { userId, workspaceId } = payload;
 
 		await this.validateService.validateManyExists([
@@ -102,6 +101,13 @@ export class UserWorkspaceService {
 			value: inviterUserId,
 		});
 
+		await this.create({
+			userId: invitedUserId,
+			workspaceId,
+			role: WorkspaceRole.MEMBER,
+			invitationStatus: InvitationStatus.INVITED
+		})
+
 		this.notificationService.sendNotificationInvite({
 			toUser: invitedUser,
 			fromUser: inviterUser,
@@ -109,16 +115,34 @@ export class UserWorkspaceService {
 		});
 	}
 
-	async acceptInvite(workspaceId: TypeID, userId: TypeID) {
-		// Logic user chấp nhận lời mời, update trạng thái thành accepted
+	async acceptInvite(data: { workspaceId: TypeID, userId: TypeID }) {
+
+		const userWorkspace = await this.userWorkspaceRepository.findOne({ where: data })
+		if (!userWorkspace) {
+			throw new NotFoundException('User workspace not found')
+		}
+
+		userWorkspace.invitationStatus = InvitationStatus.ACCEPTED
+
+		return await this.userWorkspaceRepository.save(userWorkspace)
 	}
 
-	async updateUserRole(
+	async updateUserRole(data: {
 		workspaceId: TypeID,
 		userId: TypeID,
-		role: 'admin' | 'member',
-	) {
-		// Logic cập nhật role
+		role: WorkspaceRole
+	}) {
+		const { workspaceId, userId, role } = data
+
+		const userWorkspace = await this.userWorkspaceRepository.findOne({ where: { workspaceId, userId } })
+
+		if (!userWorkspace) {
+			throw new NotFoundException('User workspace not found')
+		}
+
+		userWorkspace.role = role
+
+		return await this.userWorkspaceRepository.save(userWorkspace)
 	}
 
 	async getMembers(workspaceId: TypeID) {

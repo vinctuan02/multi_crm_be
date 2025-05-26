@@ -3,3 +3,10 @@ export enum WorkspaceRole {
 	MEMBER = 'member',
 	VIEWER = 'viewer',
 }
+
+export enum InvitationStatus {
+	INVITED = 'INVITED',
+	ACCEPTED = 'ACCEPTED',
+	REMOVED = 'REMOVED',
+}
+

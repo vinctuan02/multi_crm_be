@@ -4,6 +4,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('workspace')
 export class Workspace extends BaseEntity {
+
 	@Column({ type: 'varchar', length: '255' })
 	name: string;
 
