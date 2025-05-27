@@ -31,7 +31,7 @@ export class UserWorkspaceService {
 		private readonly notificationService: NotificationService,
 
 		private readonly userService: UserService,
-	) { }
+	) {}
 
 	async create(payload: CreateUserWorkspaceDto) {
 		const { userId, workspaceId } = payload;
@@ -105,8 +105,8 @@ export class UserWorkspaceService {
 			userId: invitedUserId,
 			workspaceId,
 			role: WorkspaceRole.MEMBER,
-			invitationStatus: InvitationStatus.INVITED
-		})
+			invitationStatus: InvitationStatus.INVITED,
+		});
 
 		this.notificationService.sendNotificationInvite({
 			toUser: invitedUser,
@@ -115,34 +115,37 @@ export class UserWorkspaceService {
 		});
 	}
 
-	async acceptInvite(data: { workspaceId: TypeID, userId: TypeID }) {
-
-		const userWorkspace = await this.userWorkspaceRepository.findOne({ where: data })
+	async acceptInvite(data: { workspaceId: TypeID; userId: TypeID }) {
+		const userWorkspace = await this.userWorkspaceRepository.findOne({
+			where: data,
+		});
 		if (!userWorkspace) {
-			throw new NotFoundException('User workspace not found')
+			throw new NotFoundException('User workspace not found');
 		}
 
-		userWorkspace.invitationStatus = InvitationStatus.ACCEPTED
+		userWorkspace.invitationStatus = InvitationStatus.ACCEPTED;
 
-		return await this.userWorkspaceRepository.save(userWorkspace)
+		return await this.userWorkspaceRepository.save(userWorkspace);
 	}
 
 	async updateUserRole(data: {
-		workspaceId: TypeID,
-		userId: TypeID,
-		role: WorkspaceRole
+		workspaceId: TypeID;
+		userId: TypeID;
+		role: WorkspaceRole;
 	}) {
-		const { workspaceId, userId, role } = data
+		const { workspaceId, userId, role } = data;
 
-		const userWorkspace = await this.userWorkspaceRepository.findOne({ where: { workspaceId, userId } })
+		const userWorkspace = await this.userWorkspaceRepository.findOne({
+			where: { workspaceId, userId },
+		});
 
 		if (!userWorkspace) {
-			throw new NotFoundException('User workspace not found')
+			throw new NotFoundException('User workspace not found');
 		}
 
-		userWorkspace.role = role
+		userWorkspace.role = role;
 
-		return await this.userWorkspaceRepository.save(userWorkspace)
+		return await this.userWorkspaceRepository.save(userWorkspace);
 	}
 
 	async getMembers(workspaceId: TypeID) {
