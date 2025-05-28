@@ -19,12 +19,12 @@ export class TenantMiddleware implements NestMiddleware {
 					await this.workspaceService.findBySubdomain(subdomain);
 				if (!workspace)
 					throw new NotFoundException('Workspace not found');
-				req['workspace'] = workspace;
+				req['workspaceId'] = workspace.id;
 			} else {
-				req['workspace'] = null;
+				req['workspaceId'] = null;
 			}
 		} else {
-			req['workspace'] = null;
+			req['workspaceId'] = null;
 		}
 		next();
 	}

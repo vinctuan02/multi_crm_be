@@ -1,0 +1,4 @@
+Role,Quyền hạn trong workspace,Mô tả chi tiết
+Admin,"Tạo, sửa, xóa khách hàng, phân quyền user, quản lý nội dung","Quyền cao nhất trong workspace"
+Editor,"Chỉnh sửa, xem khách hàng, nội dung nhưng không được xóa","Nhân viên thao tác dữ liệu, không phân quyền"
+Viewer,"Chỉ xem khách hàng và nội dung","Chỉ được đọc, không chỉnh sửa"

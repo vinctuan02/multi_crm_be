@@ -91,6 +91,10 @@ export class WorkspaceService {
 		return this.workspaceRepo.findOne({ where: { subdomain } });
 	}
 
+	async findById(id: TypeID): Promise<Workspace | null> {
+		return this.workspaceRepo.findOne({ where: { id } });
+	}
+
 	async getUserRoleInWorkspace(data: {
 		userId: TypeID;
 		workspaceId: TypeID;

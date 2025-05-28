@@ -56,12 +56,14 @@ export class WorkspaceController {
 	async getMetadata(
 		@Req() req: CustomRequest,
 	): Promise<ResponseSuccessDto<Partial<Workspace>>> {
-		const workspace = req.workspace;
+		const workspaceId = req.workspaceId;
 		const user = req.user;
 
 		if (!user) {
 			throw new UnauthorizedException('User not authenticated');
 		}
+
+		const workspace = await this.workspaceService.findById(workspaceId);
 
 		if (!workspace) {
 			throw new NotFoundException('Workspace not found in request');

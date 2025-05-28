@@ -4,6 +4,7 @@ import { HelperModule } from 'src/helper/helper.module';
 import { UserWorkspace } from 'src/user-workspace/entities/user-workspace.entity';
 import { UserWorkspaceModule } from 'src/user-workspace/user-workspace.module';
 import { WorkspaceMembersController } from './controllers/workspace-members.controller';
+import { WorkspaceMembersSubdomainController } from './controllers/workspace-members.subdomain.controller';
 import { WorkspaceController } from './controllers/workspace.controller';
 import { Workspace } from './entities/workspace.entity';
 import { WorkspaceMembersService } from './services/workspace-members.service';
@@ -16,7 +17,11 @@ import { WorkspaceService } from './services/workspace.service';
 		HelperModule,
 	],
 	providers: [WorkspaceService, WorkspaceMembersService],
-	controllers: [WorkspaceController, WorkspaceMembersController],
+	controllers: [
+		WorkspaceController,
+		WorkspaceMembersController,
+		WorkspaceMembersSubdomainController,
+	],
 	exports: [WorkspaceService],
 })
 export class WorkspaceModule {}
