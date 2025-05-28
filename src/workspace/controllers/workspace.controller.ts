@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
-import { CustomRequest } from 'src/common/inteface/custom-request.interface';
+import { CustomRequest } from 'src/common/interface/custom-request.interface';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { JwtUser } from 'src/jwt/interfaces/jwt.interface';
 import { CreateWorkspaceDto, UpdateWorkspaceDto } from '../dto/workspace.dto';

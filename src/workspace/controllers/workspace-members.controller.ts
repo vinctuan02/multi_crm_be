@@ -1,6 +1,5 @@
 // src/workspace/workspace-members.controller.ts
 import {
-	BadRequestException,
 	Body,
 	Controller,
 	ForbiddenException,
@@ -12,19 +11,18 @@ import {
 } from '@nestjs/common';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
 
-import { CustomRequest } from 'src/common/inteface/custom-request.interface';
+import { CustomRequest } from 'src/common/interface/custom-request.interface';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { WorkspaceRole } from 'src/user-workspace/enums/user-workspace.enum';
 import { WorkspaceMembersService } from '../services/workspace-members.service';
 import { WorkspaceService } from '../services/workspace.service';
-import { IsEnum } from 'class-validator';
 
 @Controller('workspaces/:workspaceId/members')
 export class WorkspaceMembersController {
 	constructor(
 		private readonly workspaceMembersService: WorkspaceMembersService,
 		private readonly workspaceService: WorkspaceService,
-	) { }
+	) {}
 
 	@Post('invite')
 	async inviteUser(
@@ -52,9 +50,15 @@ export class WorkspaceMembersController {
 	}
 
 	@Post('invite/accept')
-	async acceptInvite(@Param('workspaceId') workspaceId: TypeID, @Req() req: CustomRequest) {
+	async acceptInvite(
+		@Param('workspaceId') workspaceId: TypeID,
+		@Req() req: CustomRequest,
+	) {
 		const user = req.user;
-		const data = await this.workspaceMembersService.acceptInvite({ workspaceId, userId: user.id });
+		const data = await this.workspaceMembersService.acceptInvite({
+			workspaceId,
+			userId: user.id,
+		});
 		return new ResponseSuccessDto({ message: 'Invite accepted', data });
 	}
 

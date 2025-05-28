@@ -6,18 +6,21 @@ import { UserWorkspaceService } from 'src/user-workspace/services/user-workspace
 
 @Injectable()
 export class WorkspaceMembersService {
-	constructor(private readonly userWorkspaceService: UserWorkspaceService) { }
+	constructor(private readonly userWorkspaceService: UserWorkspaceService) {}
 
 	async inviteUser(data: InviteUserToWorkspaceDto) {
 		await this.userWorkspaceService.inviteUser(data);
 	}
 
-
-	async acceptInvite(data: { workspaceId: TypeID, userId: TypeID }) {
+	async acceptInvite(data: { workspaceId: TypeID; userId: TypeID }) {
 		return await this.userWorkspaceService.acceptInvite(data);
 	}
 
-	async updateUserRole(data: { workspaceId: TypeID, userId: TypeID, role: WorkspaceRole }) {
+	async updateUserRole(data: {
+		workspaceId: TypeID;
+		userId: TypeID;
+		role: WorkspaceRole;
+	}) {
 		return await this.userWorkspaceService.updateUserRole(data);
 	}
 

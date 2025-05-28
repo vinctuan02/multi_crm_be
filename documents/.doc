@@ -1,0 +1,59 @@
+1. Quản lý Workspace (Tenant)
+Tạo workspace mới (tên, subdomain, logo)
+
+Cập nhật và xem thông tin workspace
+
+Hiển thị workspace riêng biệt theo domain/subdomain
+
+2. Quản lý User & Phân quyền
+Đăng ký & đăng nhập (Internal User và Customer User)
+
+Mời user vào workspace qua email
+
+Phân quyền user (admin, editor, viewer)
+
+Danh sách thành viên workspace
+
+3. Quản lý Khách hàng (Customer)
+Tạo, sửa, xóa khách hàng liên kết workspace
+
+Xem và tìm kiếm danh sách khách hàng theo nhiều tiêu chí
+
+4. Quản lý Metadata & Nội dung phân phối
+Quản lý album, bài hát, nghệ sĩ, tác quyền
+
+Upload và chỉnh sửa metadata (ISRC, artwork…)
+
+Gán nội dung phân phối vào khách hàng và workspace
+
+5. Quản lý Đơn hàng & Phân phối
+Tạo đơn hàng phân phối lên các DSP
+
+Theo dõi trạng thái đơn hàng (đang xử lý, đã phát hành, lỗi)
+
+Lịch sử đơn hàng và các lần cập nhật
+
+6. Hệ thống Ticket & Hỗ trợ khách hàng
+Khách hàng tạo ticket hỗ trợ
+
+Nhân viên xử lý và phản hồi ticket
+
+Cập nhật trạng thái, bình luận, trao đổi qua ticket
+
+Báo cáo hiệu suất xử lý ticket
+
+7. Báo cáo & Dashboard
+Báo cáo tổng quan phân phối nhạc, doanh thu theo khách hàng
+
+Thống kê hiệu suất nhân viên, tiến độ xử lý đơn hàng và ticket
+
+Dashboard trực quan cho admin và khách hàng
+
+8. Tùy biến Giao diện & Brand
+Cho phép khách hàng tùy chỉnh logo, màu sắc, domain (white-label)
+
+Giao diện riêng biệt theo workspace, đa tenancy
+
+Bạn có thể chọn demo tuần tự theo quy trình:
+Đăng nhập → Quản lý Workspace → Quản lý User → Quản lý Khách hàng → Tạo đơn hàng → Xem báo cáo → Hỗ trợ khách hàng qua Ticket
+
