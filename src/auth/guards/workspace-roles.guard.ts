@@ -5,9 +5,9 @@ import {
 	Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { CustomRequest } from 'src/common/interface/custom-request.interface';
 import { UserWorkspaceService } from 'src/user-workspace/services/user-workspace.service';
 import { ROLES_KEY } from '../decorators/roles.decorator';
-import { CustomRequest } from '../interface/custom-request.interface';
 
 @Injectable()
 export class WorkspaceRolesGuard implements CanActivate {
@@ -21,8 +21,6 @@ export class WorkspaceRolesGuard implements CanActivate {
 			context.getHandler(),
 			context.getClass(),
 		]);
-
-		console.log(roles);
 
 		if (!roles || roles.length === 0) {
 			return true;

@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ResponseSuccessDto } from 'src/common/dto/response.dto';
 
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { WorkspaceRolesGuard } from 'src/common/guards/workspace-roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { WorkspaceRolesGuard } from 'src/auth/guards/workspace-roles.guard';
 import { CustomRequest } from 'src/common/interface/custom-request.interface';
 import { TypeID } from 'src/common/typeorm/enum/db-type.enum';
 import { WorkspaceRole } from 'src/user-workspace/enums/user-workspace.enum';
